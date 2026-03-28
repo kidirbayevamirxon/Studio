@@ -30,7 +30,8 @@ export function Navigation() {
             Azat Studio
           </Link>
 
-          <div className="hidden md:flex space-x-8">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -44,7 +45,15 @@ export function Navigation() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors text-sm"
+            >
+              Admin
+            </Link>
           </div>
+
+          {/* Mobile menu button */}
           <button
             className="md:hidden p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -52,6 +61,8 @@ export function Navigation() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+
+        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4">
             {navItems.map((item) => (
@@ -68,6 +79,13 @@ export function Navigation() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="block px-3 py-2 mt-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors text-center"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Admin
+            </Link>
           </div>
         )}
       </div>

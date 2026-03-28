@@ -1,0 +1,70 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../contexts/AuthContext";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { axiosInstance } from "../../api/api";
+export function AdminLogin() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const API_URL = import.meta.env.VITE_BASE_URL;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await axiosInstance.post(`${API_URL}/auth/login`, { username, password });
+      const { accessToken } = res.data;
+
+      login(accessToken);
+      navigate("/admin/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || "Login failed");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-50 to-purple-50">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center mb-2">Azat Studio</h1>
+        <p className="text-center text-gray-600 mb-8">Admin Panel</p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Username</label>
+            <Input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <Button type="submit" className="w-full">
+            Login
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}

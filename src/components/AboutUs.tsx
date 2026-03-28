@@ -4,6 +4,7 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 export function AboutUs() {
   return (
     <div className="min-h-screen">
+      {/* Hero Section */}
       <section className="bg-linear-to-r from-blue-500 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">About Azat Studio</h1>
@@ -12,6 +13,8 @@ export function AboutUs() {
           </p>
         </div>
       </section>
+
+      {/* Main Content */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div>
@@ -43,6 +46,8 @@ export function AboutUs() {
             />
           </div>
         </div>
+
+        {/* Stats Section */}
         <div className="grid md:grid-cols-3 gap-8 py-12">
           <div className="text-center p-8 bg-blue-50 rounded-lg">
             <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -75,6 +80,8 @@ export function AboutUs() {
             </p>
           </div>
         </div>
+
+        {/* Values Section */}
         <div className="mt-16">
           <h2 className="text-3xl text-center mb-12">Our Values</h2>
           <div className="grid md:grid-cols-2 gap-8">

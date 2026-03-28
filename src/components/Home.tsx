@@ -1,9 +1,11 @@
 import { Link } from "react-router";
 import { Play, Camera, Heart } from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export function Home() {
   return (
     <div className="min-h-screen">
+      {/* Hero Section */}
       <section className="relative h-150 flex items-center justify-center bg-linear-to-r from-blue-600 to-purple-600 text-white">
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
@@ -22,6 +24,8 @@ export function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Features Section */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center p-6">
@@ -53,6 +57,8 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {/* CTA Section */}
       <section className="bg-gray-50 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl mb-6">Ready to Start Your Journey?</h2>

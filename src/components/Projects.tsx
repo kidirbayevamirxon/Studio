@@ -1,89 +1,19 @@
 import { Download, Play } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useData } from "../contexts/DataContext";
 
 export function Projects() {
-  const projects = [
-    {
-      id: 1,
-      title: "Sarah & James - Garden Wedding",
-      date: "June 2025",
-      location: "Botanical Gardens",
-      thumbnail:
-        "https://images.unsplash.com/photo-1704455305845-d5f66a560e6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmlkZSUyMGdyb29tJTIwd2VkZGluZyUyMGNlcmVtb255JTIwb3V0ZG9vcnxlbnwxfHx8fDE3NzQ0NTE0MTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "A beautiful outdoor ceremony surrounded by nature. The couple's joy was infectious as they celebrated with 150 guests.",
-      duration: "8:45",
-    },
-    {
-      id: 2,
-      title: "Maria & David - Beach Sunset",
-      date: "August 2025",
-      location: "Coastal Resort",
-      thumbnail:
-        "https://images.unsplash.com/photo-1768900043654-edf96dfc0105?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwY291cGxlJTIwcm9tYW50aWMlMjBtb21lbnR8ZW58MXx8fHwxNzc0NDUxNDEwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "An intimate beach wedding at sunset. The golden hour lighting created magical moments that will last forever.",
-      duration: "12:30",
-    },
-    {
-      id: 3,
-      title: "Emily & Robert - Classic Elegance",
-      date: "October 2025",
-      location: "Historic Mansion",
-      thumbnail:
-        "https://images.unsplash.com/photo-1519741497674-611481863552?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "A grand celebration in a historic venue. Traditional elegance meets modern romance in this stunning production.",
-      duration: "15:20",
-    },
-    {
-      id: 4,
-      title: "Lisa & Michael - Rustic Charm",
-      date: "September 2025",
-      location: "Countryside Barn",
-      thumbnail:
-        "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "A charming rustic wedding with handmade decorations and personal touches. The perfect blend of casual and elegant.",
-      duration: "10:15",
-    },
-    {
-      id: 5,
-      title: "Anna & Chris - Modern Minimalist",
-      date: "November 2025",
-      location: "Contemporary Art Gallery",
-      thumbnail:
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "A sleek and sophisticated celebration in a modern space. Clean lines and artistic vision throughout.",
-      duration: "9:30",
-    },
-    {
-      id: 6,
-      title: "Jessica & Tom - Winter Wonderland",
-      date: "December 2024",
-      location: "Mountain Lodge",
-      thumbnail:
-        "https://images.unsplash.com/photo-1522673607211-8f6f9b9fb75a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      videoUrl: "#",
-      description:
-        "A magical winter wedding with snow-covered landscapes. Cozy elegance meets breathtaking mountain views.",
-      duration: "11:45",
-    },
-  ];
+  const { projects } = useData();
 
   const handleDownload = (projectTitle: string) => {
+    // In a real application, this would trigger an actual download
     alert(
       `Download request for "${projectTitle}"\n\nIn a production environment, this would download the video file. For demo purposes, downloads are simulated.`
     );
   };
 
   const handlePlayVideo = (projectTitle: string) => {
+    // In a real application, this would open a video player
     alert(
       `Play video: "${projectTitle}"\n\nIn a production environment, this would open a video player. For demo purposes, video playback is simulated.`
     );
@@ -91,6 +21,7 @@ export function Projects() {
 
   return (
     <div className="min-h-screen">
+      {/* Hero Section */}
       <section className="bg-linear-to-r from-pink-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Our Projects</h1>
@@ -99,6 +30,8 @@ export function Projects() {
           </p>
         </div>
       </section>
+
+      {/* Filter/Stats Section */}
       <section className="py-8 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center">
@@ -180,6 +113,8 @@ export function Projects() {
           ))}
         </div>
       </section>
+
+      {/* CTA Section */}
       <section className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl mb-4">
@@ -197,6 +132,8 @@ export function Projects() {
           </a>
         </div>
       </section>
+
+      {/* Note about downloads */}
       <section className="py-8 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center text-sm text-gray-600">
           <p>

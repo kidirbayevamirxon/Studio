@@ -1,69 +1,9 @@
-import { Mail, } from "lucide-react";
+import { Mail, Linkedin, Camera } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useData } from "../contexts/DataContext";
 
 export function Team() {
-  const teamMembers = [
-    {
-      name: "Sarah Johnson",
-      role: "Lead Videographer & Founder",
-      image:
-        "https://images.unsplash.com/photo-1688080338629-04c2705a160b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmZW1hbGUlMjB3ZWRkaW5nJTIwcGhvdG9ncmFwaGVyJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzc0NDUxNDA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      bio: "With over 12 years of experience, Sarah founded Azat Studio with a vision to capture authentic moments. Her cinematic style and attention to detail have made her one of the most sought-after wedding videographers.",
-      email: "sarah@azatstudio.com",
-      level: "Senior",
-      specialties: ["Cinematic Storytelling", "Color Grading", "Direction"],
-    },
-    {
-      name: "Michael Chen",
-      role: "Senior Video Editor",
-      image:
-        "https://images.unsplash.com/photo-1603207757585-b5ca5b740596?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWxlJTIwdmlkZW8lMjBlZGl0b3IlMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzQ0NTE0MDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      bio: "Michael brings 8 years of post-production expertise to the team. His creative editing and mastery of visual effects transform raw footage into breathtaking wedding films.",
-      email: "michael@azatstudio.com",
-      level: "Senior",
-      specialties: ["Post Production", "Visual Effects", "Sound Design"],
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "Videographer",
-      image:
-        "https://images.unsplash.com/photo-1580489944761-15a19d654956?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      bio: "Emily joined the team 5 years ago and has quickly become known for her ability to capture candid, emotional moments. Her warm personality puts couples at ease.",
-      email: "emily@azatstudio.com",
-      level: "Mid-Level",
-      specialties: ["Candid Moments", "Drone Operation", "Event Coverage"],
-    },
-    {
-      name: "David Kim",
-      role: "Videographer & Sound Specialist",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      bio: "With 6 years in the industry, David specializes in capturing crystal-clear audio and managing multiple camera setups. His technical expertise ensures nothing is missed.",
-      email: "david@azatstudio.com",
-      level: "Mid-Level",
-      specialties: ["Audio Recording", "Multi-Camera Setup", "Live Streaming"],
-    },
-    {
-      name: "Jessica Martinez",
-      role: "Junior Videographer",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      bio: "Jessica is our newest team member with 2 years of experience. Her fresh perspective and enthusiasm bring energy to every project she works on.",
-      email: "jessica@azatstudio.com",
-      level: "Junior",
-      specialties: ["Social Media Content", "Behind the Scenes", "Assisting"],
-    },
-    {
-      name: "Alex Thompson",
-      role: "Junior Editor",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      bio: "Alex joined us 1.5 years ago and is rapidly developing his editing skills. He specializes in creating engaging same-day edits and social media content.",
-      email: "alex@azatstudio.com",
-      level: "Junior",
-      specialties: ["Same-Day Edits", "Quick Turnaround", "Social Media"],
-    },
-  ];
+  const { teamMembers } = useData();
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -81,7 +21,7 @@ export function Team() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Meet Our Team</h1>
           <p className="text-xl">
@@ -93,9 +33,9 @@ export function Team() {
       {/* Team Members Grid */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {teamMembers.map((member, index) => (
+          {teamMembers.map((member) => (
             <div
-              key={index}
+              key={member.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
             >
               <div className="h-80 bg-gray-200 overflow-hidden">

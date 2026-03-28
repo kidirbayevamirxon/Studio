@@ -22,6 +22,7 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // In a real application, this would send data to a server
     console.log("Form submitted:", formData);
     setIsSubmitted(true);
     setTimeout(() => {
@@ -39,7 +40,8 @@ export function Contact() {
 
   return (
     <div className="min-h-screen">
-      <section className="bg-linear-to-r from-purple-600 to-pink-600 text-white py-20 px-4">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Get In Touch</h1>
           <p className="text-xl">
@@ -48,11 +50,12 @@ export function Contact() {
         </div>
       </section>
 
+      {/* Contact Info */}
       <section className="py-12 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="flex items-start gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Phone className="text-blue-600" size={24} />
               </div>
               <div>
@@ -62,7 +65,7 @@ export function Contact() {
               </div>
             </div>
             <div className="flex items-start gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Mail className="text-purple-600" size={24} />
               </div>
               <div>
@@ -74,7 +77,7 @@ export function Contact() {
               </div>
             </div>
             <div className="flex items-start gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <MapPin className="text-pink-600" size={24} />
               </div>
               <div>
@@ -86,6 +89,8 @@ export function Contact() {
           </div>
         </div>
       </section>
+
+      {/* Contact Form */}
       <section className="py-16 px-4 max-w-4xl mx-auto">
         <div className="mb-8 text-center">
           <h2 className="text-3xl mb-3">Send Us a Message</h2>
@@ -216,10 +221,12 @@ export function Contact() {
         )}
       </section>
 
+      {/* Map Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl text-center mb-8">Visit Our Studio</h2>
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            {/* Embedded Map - Using iframe for demonstration */}
             <div className="relative h-96 bg-gray-200">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
