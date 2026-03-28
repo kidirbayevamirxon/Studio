@@ -28,7 +28,6 @@ export function AdminServices() {
     } else {
       addService(serviceData);
     }
-
     resetForm();
   };
 
@@ -51,7 +50,6 @@ export function AdminServices() {
     });
     setIsModalOpen(true);
   };
-
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this service?")) {
       deleteService(id);

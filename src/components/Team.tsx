@@ -1,4 +1,4 @@
-import { Mail, Linkedin, Camera } from "lucide-react";
+import { Mail } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useData } from "../contexts/DataContext";
 
@@ -20,7 +20,6 @@ export function Team() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Meet Our Team</h1>
@@ -29,8 +28,6 @@ export function Team() {
           </p>
         </div>
       </section>
-
-      {/* Team Members Grid */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => (
@@ -85,8 +82,6 @@ export function Team() {
           ))}
         </div>
       </section>
-
-      {/* Team Stats */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl text-center mb-12">Our Team Structure</h2>
@@ -115,8 +110,6 @@ export function Team() {
           </div>
         </div>
       </section>
-
-      {/* Team Philosophy */}
       <section className="py-16 px-4 max-w-4xl mx-auto">
         <div className="text-center">
           <h2 className="text-3xl mb-6">Why Our Team Stands Out</h2>

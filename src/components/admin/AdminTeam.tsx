@@ -6,7 +6,7 @@ import { Card } from "../ui/card";
 import { Plus, Edit2, Trash2, X } from "lucide-react";
 
 export function AdminTeam() {
-  const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember } = useData();
+  const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, loading, error } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState({
@@ -19,34 +19,46 @@ export function AdminTeam() {
     specialties: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading team members...</p>
+        </div>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+        <p className="text-red-600 mb-4">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const memberData = {
       ...formData,
       specialties: formData.specialties.split(",").map((s) => s.trim()),
     };
 
-    if (editingMember) {
-      updateTeamMember(editingMember.id, memberData);
-    } else {
-      addTeamMember(memberData);
+    try {
+      if (editingMember) {
+        await updateTeamMember(editingMember.id, memberData);
+      } else {
+        await addTeamMember(memberData);
+      }
+      resetForm();
+    } catch (err) {
+      console.error("Failed to save team member:", err);
     }
-
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      role: "",
-      image: "",
-      bio: "",
-      email: "",
-      level: "Mid-Level",
-      specialties: "",
-    });
-    setEditingMember(null);
-    setIsModalOpen(false);
   };
 
   const handleEdit = (member: TeamMember) => {
@@ -58,9 +70,13 @@ export function AdminTeam() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this team member?")) {
-      deleteTeamMember(id);
+      try {
+        await deleteTeamMember(id);
+      } catch (err) {
+        console.error("Failed to delete team member:", err);
+      }
     }
   };
 

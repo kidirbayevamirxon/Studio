@@ -19,10 +19,8 @@ export function Contact() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would send data to a server
     console.log("Form submitted:", formData);
     setIsSubmitted(true);
     setTimeout(() => {
@@ -40,7 +38,6 @@ export function Contact() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Get In Touch</h1>
@@ -49,8 +46,6 @@ export function Contact() {
           </p>
         </div>
       </section>
-
-      {/* Contact Info */}
       <section className="py-12 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
@@ -89,8 +84,6 @@ export function Contact() {
           </div>
         </div>
       </section>
-
-      {/* Contact Form */}
       <section className="py-16 px-4 max-w-4xl mx-auto">
         <div className="mb-8 text-center">
           <h2 className="text-3xl mb-3">Send Us a Message</h2>
@@ -99,7 +92,6 @@ export function Contact() {
             possible
           </p>
         </div>
-
         {isSubmitted ? (
           <div className="bg-green-50 border-2 border-green-200 rounded-lg p-8 text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -220,8 +212,6 @@ export function Contact() {
           </form>
         )}
       </section>
-
-      {/* Map Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl text-center mb-8">Visit Our Studio</h2>

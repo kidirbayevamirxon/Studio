@@ -1,3 +1,4 @@
+// components/admin/AdminLogin.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
@@ -11,23 +12,24 @@ export function AdminLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_BASE_URL;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const res = await axiosInstance.post(`${API_URL}/auth/login`, { username, password });
-      const { accessToken } = res.data;
-
-      login(accessToken);
-      navigate("/admin/dashboard");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.response?.data?.message || "Login failed");
-    }
-  };
+  try {
+    const res = await axiosInstance.post("/auth/login", {
+      login: username,
+      password: password,
+    });
+    const { accessToken, refreshToken } = res.data;
+    localStorage.setItem("refreshToken", refreshToken);
+    login(accessToken);
+    navigate("/admin/dashboard");
+  } catch (err: any) {
+    console.error(err);
+    setError(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-50 to-purple-50">
@@ -57,9 +59,7 @@ export function AdminLogin() {
               required
             />
           </div>
-
           {error && <p className="text-red-500 text-sm">{error}</p>}
-
           <Button type="submit" className="w-full">
             Login
           </Button>

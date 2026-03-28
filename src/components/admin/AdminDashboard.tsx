@@ -1,26 +1,30 @@
+// components/admin/AdminDashboard.tsx
 import { useData } from "../../contexts/DataContext";
 import { Card } from "../ui/card";
 import { Users, FolderOpen, Briefcase, TrendingUp } from "lucide-react";
 
 export function AdminDashboard() {
-  const { teamMembers, projects, services } = useData();
+  const { teamMembers, projects, services, loading, error, refreshData } = useData();
+  const safeTeamMembers = Array.isArray(teamMembers) ? teamMembers : [];
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const safeServices = Array.isArray(services) ? services : [];
 
   const stats = [
     {
       label: "Team Members",
-      value: teamMembers.length,
+      value: safeTeamMembers.length,
       icon: Users,
       color: "bg-blue-500",
     },
     {
       label: "Projects",
-      value: projects.length,
+      value: safeProjects.length,
       icon: FolderOpen,
       color: "bg-purple-500",
     },
     {
       label: "Services",
-      value: services.length,
+      value: safeServices.length,
       icon: Briefcase,
       color: "bg-pink-500",
     },
@@ -31,6 +35,31 @@ export function AdminDashboard() {
       color: "bg-green-500",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+        <p className="text-red-600 mb-4">{error}</p>
+        <button
+          onClick={refreshData}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -56,41 +85,55 @@ export function AdminDashboard() {
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">Recent Projects</h3>
           <div className="space-y-3">
-            {projects.slice(0, 5).map((project) => (
-              <div key={project.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
-                <img
-                  src={project.thumbnail}
-                  alt={project.title}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <p className="font-medium">{project.title}</p>
-                  <p className="text-sm text-gray-600">{project.date}</p>
+            {safeProjects.length > 0 ? (
+              safeProjects.slice(0, 5).map((project) => (
+                <div key={project.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+                  <img
+                    src={project.thumbnail}
+                    alt={project.title}
+                    className="w-16 h-16 object-cover rounded"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://via.placeholder.com/64x64?text=No+Image";
+                    }}
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium">{project.title}</p>
+                    <p className="text-sm text-gray-600">{project.date}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">No projects yet</p>
+            )}
           </div>
         </Card>
 
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">Team Overview</h3>
           <div className="space-y-3">
-            {teamMembers.slice(0, 5).map((member) => (
-              <div key={member.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-12 h-12 object-cover rounded-full"
-                />
-                <div className="flex-1">
-                  <p className="font-medium">{member.name}</p>
-                  <p className="text-sm text-gray-600">{member.role}</p>
+            {safeTeamMembers.length > 0 ? (
+              safeTeamMembers.slice(0, 5).map((member) => (
+                <div key={member.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-12 h-12 object-cover rounded-full"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://via.placeholder.com/48x48?text=No+Image";
+                    }}
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium">{member.name}</p>
+                    <p className="text-sm text-gray-600">{member.role}</p>
+                  </div>
+                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                    {member.level}
+                  </span>
                 </div>
-                <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                  {member.level}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">No team members yet</p>
+            )}
           </div>
         </Card>
       </div>

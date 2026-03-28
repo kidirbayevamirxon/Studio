@@ -6,7 +6,6 @@ export function Services() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Our Services</h1>
@@ -15,8 +14,6 @@ export function Services() {
           </p>
         </div>
       </section>
-
-      {/* Services Grid */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
@@ -41,8 +38,6 @@ export function Services() {
           })}
         </div>
       </section>
-
-      {/* Additional Info Section */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl text-center mb-8">Why Choose Our Services?</h2>

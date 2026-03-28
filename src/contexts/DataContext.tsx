@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import type { ReactNode } from 'react'
+// contexts/DataContext.tsx
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { axiosInstance } from "../api/api";
 
 export interface TeamMember {
   id: string;
@@ -35,152 +36,155 @@ interface DataContextType {
   teamMembers: TeamMember[];
   projects: Project[];
   services: Service[];
-  addTeamMember: (member: Omit<TeamMember, "id">) => void;
-  updateTeamMember: (id: string, member: Omit<TeamMember, "id">) => void;
-  deleteTeamMember: (id: string) => void;
-  addProject: (project: Omit<Project, "id">) => void;
-  updateProject: (id: string, project: Omit<Project, "id">) => void;
-  deleteProject: (id: string) => void;
-  addService: (service: Omit<Service, "id">) => void;
-  updateService: (id: string, service: Omit<Service, "id">) => void;
-  deleteService: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  addTeamMember: (member: Omit<TeamMember, "id">) => Promise<void>;
+  updateTeamMember: (id: string, member: Omit<TeamMember, "id">) => Promise<void>;
+  deleteTeamMember: (id: string) => Promise<void>;
+  addProject: (project: Omit<Project, "id">) => Promise<void>;
+  updateProject: (id: string, project: Omit<Project, "id">) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  addService: (service: Omit<Service, "id">) => Promise<void>;
+  updateService: (id: string, service: Omit<Service, "id">) => Promise<void>;
+  deleteService: (id: string) => Promise<void>;
+  refreshData: () => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
-
-const initialTeamMembers: TeamMember[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    role: "Lead Videographer & Founder",
-    image: "https://images.unsplash.com/photo-1688080338629-04c2705a160b?w=400",
-    bio: "With over 12 years of experience, Sarah founded Azat Studio with a vision to capture authentic moments.",
-    email: "sarah@azatstudio.com",
-    level: "Senior",
-    specialties: ["Cinematic Storytelling", "Color Grading", "Direction"],
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    role: "Senior Video Editor",
-    image: "https://images.unsplash.com/photo-1603207757585-b5ca5b740596?w=400",
-    bio: "Michael brings 8 years of post-production expertise to the team.",
-    email: "michael@azatstudio.com",
-    level: "Senior",
-    specialties: ["Post Production", "Visual Effects", "Sound Design"],
-  },
-];
-
-const initialProjects: Project[] = [
-  {
-    id: "1",
-    title: "Sarah & James - Garden Wedding",
-    date: "June 2025",
-    location: "Botanical Gardens",
-    thumbnail: "https://images.unsplash.com/photo-1704455305845-d5f66a560e6f?w=600",
-    videoUrl: "#",
-    description: "A beautiful outdoor ceremony surrounded by nature.",
-    duration: "8:45",
-  },
-  {
-    id: "2",
-    title: "Maria & David - Beach Sunset",
-    date: "August 2025",
-    location: "Coastal Resort",
-    thumbnail: "https://images.unsplash.com/photo-1768900043654-edf96dfc0105?w=600",
-    videoUrl: "#",
-    description: "An intimate beach wedding at sunset.",
-    duration: "12:30",
-  },
-];
-
-const initialServices: Service[] = [
-  {
-    id: "1",
-    title: "Essential Package",
-    description: "Perfect for intimate weddings",
-    price: "$2,500",
-    features: ["6 hours coverage", "1 videographer", "Highlight video (3-5 min)", "Online delivery"],
-  },
-  {
-    id: "2",
-    title: "Premium Package",
-    description: "Our most popular choice",
-    price: "$4,500",
-    features: ["8 hours coverage", "2 videographers", "Highlight + Full ceremony", "Drone footage", "Same-day edit"],
-  },
-];
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedTeam = localStorage.getItem("team_members");
-    const storedProjects = localStorage.getItem("projects");
-    const storedServices = localStorage.getItem("services");
-
-    setTeamMembers(storedTeam ? JSON.parse(storedTeam) : initialTeamMembers);
-    setProjects(storedProjects ? JSON.parse(storedProjects) : initialProjects);
-    setServices(storedServices ? JSON.parse(storedServices) : initialServices);
+    refreshData();
   }, []);
 
-  useEffect(() => {
-    if (teamMembers.length > 0) {
-      localStorage.setItem("team_members", JSON.stringify(teamMembers));
+  const refreshData = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const [teamRes, projectsRes, servicesRes] = await Promise.all([
+        axiosInstance.get("/team/"),
+        axiosInstance.get("/yt/"),
+        axiosInstance.get("/services/"),
+      ]);
+      const extractData = (response: any): any[] => {
+        if (Array.isArray(response)) return response;
+        if (response?.data && Array.isArray(response.data)) return response.data;
+        if (response?.items && Array.isArray(response.items)) return response.items;
+        return [];
+      };
+
+      const teamData = extractData(teamRes.data);
+      const projectsData = extractData(projectsRes.data);
+      const servicesData = extractData(servicesRes.data);
+
+      setTeamMembers(teamData);
+      setProjects(projectsData);
+      setServices(servicesData);
+    } catch (err: any) {
+      console.error("API Error Details:", err);
+      setError(err.response?.data?.message || err.message || "Failed to load data from server");
+      setTeamMembers([]);
+      setProjects([]);
+      setServices([]);
+    } finally {
+      setLoading(false);
     }
-  }, [teamMembers]);
+  };
 
-  useEffect(() => {
-    if (projects.length > 0) {
-      localStorage.setItem("projects", JSON.stringify(projects));
+  const addTeamMember = async (member: Omit<TeamMember, "id">) => {
+    try {
+      const response = await axiosInstance.post("/team/", member);
+      setTeamMembers(prev => [...prev, response.data]);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to add team member");
+      throw err;
     }
-  }, [projects]);
+  };
 
-  useEffect(() => {
-    if (services.length > 0) {
-      localStorage.setItem("services", JSON.stringify(services));
+  const updateTeamMember = async (id: string, member: Omit<TeamMember, "id">) => {
+    try {
+      const response = await axiosInstance.patch(`/team/${id}`, member);
+      setTeamMembers(prev => prev.map(m => m.id === id ? response.data : m));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to update team member");
+      throw err;
     }
-  }, [services]);
-
-  const addTeamMember = (member: Omit<TeamMember, "id">) => {
-    const newMember = { ...member, id: Date.now().toString() };
-    setTeamMembers((prev) => [...prev, newMember]);
   };
 
-  const updateTeamMember = (id: string, member: Omit<TeamMember, "id">) => {
-    setTeamMembers((prev) => prev.map((m) => (m.id === id ? { ...member, id } : m)));
+  const deleteTeamMember = async (id: string) => {
+    try {
+      await axiosInstance.delete(`/team/${id}`);
+      setTeamMembers(prev => prev.filter(m => m.id !== id));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to delete team member");
+      throw err;
+    }
+  };
+  const addProject = async (project: Omit<Project, "id">) => {
+    try {
+      const response = await axiosInstance.post("/yt/", project);
+      setProjects(prev => [...prev, response.data]);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to add project");
+      throw err;
+    }
   };
 
-  const deleteTeamMember = (id: string) => {
-    setTeamMembers((prev) => prev.filter((m) => m.id !== id));
+  const updateProject = async (id: string, project: Omit<Project, "id">) => {
+    try {
+      const response = await axiosInstance.patch(`/yt/${id}`, project);
+      setProjects(prev => prev.map(p => p.id === id ? response.data : p));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to update project");
+      throw err;
+    }
   };
 
-  const addProject = (project: Omit<Project, "id">) => {
-    const newProject = { ...project, id: Date.now().toString() };
-    setProjects((prev) => [...prev, newProject]);
+  const deleteProject = async (id: string) => {
+    try {
+      await axiosInstance.delete(`/yt/${id}`);
+      setProjects(prev => prev.filter(p => p.id !== id));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to delete project");
+      throw err;
+    }
   };
 
-  const updateProject = (id: string, project: Omit<Project, "id">) => {
-    setProjects((prev) => prev.map((p) => (p.id === id ? { ...project, id } : p)));
+  const addService = async (service: Omit<Service, "id">) => {
+    try {
+      const response = await axiosInstance.post("/services/", service);
+      setServices(prev => [...prev, response.data]);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to add service");
+      throw err;
+    }
   };
 
-  const deleteProject = (id: string) => {
-    setProjects((prev) => prev.filter((p) => p.id !== id));
+  const updateService = async (id: string, service: Omit<Service, "id">) => {
+    try {
+      const response = await axiosInstance.patch(`/services/${id}`, service);
+      setServices(prev => prev.map(s => s.id === id ? response.data : s));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to update service");
+      throw err;
+    }
   };
 
-  const addService = (service: Omit<Service, "id">) => {
-    const newService = { ...service, id: Date.now().toString() };
-    setServices((prev) => [...prev, newService]);
-  };
-
-  const updateService = (id: string, service: Omit<Service, "id">) => {
-    setServices((prev) => prev.map((s) => (s.id === id ? { ...service, id } : s)));
-  };
-
-  const deleteService = (id: string) => {
-    setServices((prev) => prev.filter((s) => s.id !== id));
+  const deleteService = async (id: string) => {
+    try {
+      await axiosInstance.delete(`/services/${id}`);
+      setServices(prev => prev.filter(s => s.id !== id));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to delete service");
+      throw err;
+    }
   };
 
   return (
@@ -189,6 +193,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         teamMembers,
         projects,
         services,
+        loading,
+        error,
         addTeamMember,
         updateTeamMember,
         deleteTeamMember,
@@ -198,6 +204,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         addService,
         updateService,
         deleteService,
+        refreshData,
       }}
     >
       {children}

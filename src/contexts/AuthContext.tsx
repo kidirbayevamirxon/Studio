@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { axiosInstance } from "../api/api";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -13,13 +14,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
-  const API_URL = import.meta.env.VITE_BASE_URL;
-
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setIsAuthenticated(true);
       setToken(storedToken);
+      axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
     }
   }, []);
 
@@ -27,12 +27,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(true);
     setToken(accessToken);
     localStorage.setItem("token", accessToken);
+    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setToken(null);
     localStorage.removeItem("token");
+    delete axiosInstance.defaults.headers.common["Authorization"];
   };
 
   return (
