@@ -12,16 +12,16 @@ export interface TeamMember {
   level: string;
   specialties: string[];
 }
-
 export interface Project {
   id: string;
   title: string;
-  date: string;
-  location: string;
   thumbnail: string;
-  videoUrl: string;
+  embed_url: string;
   description: string;
-  duration: string;
+  duration: number; 
+  created_at: string;
+  location?: string; 
+  video_id: string;
 }
 
 export interface Service {
@@ -161,6 +161,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     try {
       const response = await axiosInstance.post("/services/", service);
       setServices(prev => [...prev, response.data]);
+      await refreshData();
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to add service");
       throw err;

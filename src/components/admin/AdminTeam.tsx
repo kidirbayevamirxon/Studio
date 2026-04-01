@@ -18,7 +18,19 @@ export function AdminTeam() {
     level: "Mid-Level",
     specialties: "",
   });
-
+const resetForm = () => {
+  setFormData({
+    name: "",
+    role: "",
+    image: "",
+    bio: "",
+    email: "",
+    level: "Mid-Level",
+    specialties: "",
+  });
+  setEditingMember(null);
+  setIsModalOpen(false);
+};
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">

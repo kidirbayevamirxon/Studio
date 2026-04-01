@@ -20,6 +20,7 @@ export function Team() {
 
   return (
     <div className="min-h-screen">
+      {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Meet Our Team</h1>
@@ -28,61 +29,77 @@ export function Team() {
           </p>
         </div>
       </section>
+
+      {/* Team Members */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {teamMembers.map((member) => (
-            <div
-              key={member.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-            >
-              <div className="h-80 bg-gray-200 overflow-hidden">
-                <ImageWithFallback
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl">{member.name}</h3>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ${getLevelColor(
-                      member.level
-                    )}`}
-                  >
-                    {member.level}
-                  </span>
+          {teamMembers.map((member) => {
+            // Agar specialties array bo‘lmasa, bo‘sh array qilamiz
+            const specialtiesArray = Array.isArray(member.specialties)
+              ? member.specialties
+              : [];
+
+            return (
+              <div
+                key={member.id}
+                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <div className="h-80 bg-gray-200 overflow-hidden">
+                  <ImageWithFallback
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-blue-600 mb-3">{member.role}</p>
-                <p className="text-gray-700 text-sm mb-4">{member.bio}</p>
-                <div className="mb-4">
-                  <p className="text-sm mb-2">Specialties:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {member.specialties.map((specialty, idx) => (
-                      <span
-                        key={idx}
-                        className="text-xs bg-gray-100 px-2 py-1 rounded"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl">{member.name}</h3>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${getLevelColor(
+                        member.level
+                      )}`}
+                    >
+                      {member.level}
+                    </span>
+                  </div>
+                  <p className="text-blue-600 mb-3">{member.role}</p>
+                  <p className="text-gray-700 text-sm mb-4">{member.bio}</p>
+                  <div className="mb-4">
+                    <p className="text-sm mb-2">Specialties:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {specialtiesArray.map((specialty, idx) => (
+                        <span
+                          key={idx}
+                          className="text-xs bg-gray-100 px-2 py-1 rounded"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                      {specialtiesArray.length === 0 && (
+                        <span className="text-xs text-gray-400">
+                          No specialties listed
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center text-gray-600 text-sm">
+                    <Mail size={16} className="mr-2" />
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="hover:text-blue-600"
+                    >
+                      {member.email}
+                    </a>
                   </div>
                 </div>
-                <div className="flex items-center text-gray-600 text-sm">
-                  <Mail size={16} className="mr-2" />
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="hover:text-blue-600"
-                  >
-                    {member.email}
-                  </a>
-                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
-      <section className="bg-gray-50 py-16 px-4">
+
+      {/* Team Structure */}
+      {/* <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl text-center mb-12">Our Team Structure</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -109,8 +126,8 @@ export function Team() {
             </div>
           </div>
         </div>
-      </section>
-      <section className="py-16 px-4 max-w-4xl mx-auto">
+      </section> */}
+            <section className="py-16 px-4 max-w-4xl mx-auto">
         <div className="text-center">
           <h2 className="text-3xl mb-6">Why Our Team Stands Out</h2>
           <p className="text-lg text-gray-700 mb-8">
