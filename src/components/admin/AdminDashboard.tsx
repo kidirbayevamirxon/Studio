@@ -4,7 +4,8 @@ import { Card } from "../ui/card";
 import { Users, FolderOpen, Briefcase, TrendingUp } from "lucide-react";
 
 export function AdminDashboard() {
-  const { teamMembers, projects, services, loading, error, refreshData } = useData();
+  const { teamMembers, projects, services, loading, error, refreshData } =
+    useData();
   const safeTeamMembers = Array.isArray(teamMembers) ? teamMembers : [];
   const safeProjects = Array.isArray(projects) ? projects : [];
   const safeServices = Array.isArray(services) ? services : [];
@@ -87,18 +88,33 @@ export function AdminDashboard() {
           <div className="space-y-3">
             {safeProjects.length > 0 ? (
               safeProjects.slice(0, 5).map((project) => (
-                <div key={project.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+                <div
+                  key={project.id}
+                  className="flex items-center space-x-3 p-3 bg-gray-50 rounded"
+                >
                   <img
                     src={project.thumbnail}
                     alt={project.title}
                     className="w-16 h-16 object-cover rounded"
                     onError={(e) => {
-                      e.currentTarget.src = "https://via.placeholder.com/64x64?text=No+Image";
+                      e.currentTarget.src =
+                        "https://via.placeholder.com/64x64?text=No+Image";
                     }}
                   />
                   <div className="flex-1">
                     <p className="font-medium">{project.title}</p>
-                    <p className="text-sm text-gray-600">{project.date}</p>
+                    <p className="text-sm text-gray-600">
+                      {new Date(project.created_at).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
+                    </p>
                   </div>
                 </div>
               ))
@@ -113,26 +129,20 @@ export function AdminDashboard() {
           <div className="space-y-3">
             {safeTeamMembers.length > 0 ? (
               safeTeamMembers.slice(0, 5).map((member) => (
-                <div key={member.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-12 h-12 object-cover rounded-full"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://via.placeholder.com/48x48?text=No+Image";
-                    }}
-                  />
+                <div
+                  key={member.id}
+                  className="flex items-center space-x-3 p-3 bg-gray-50 rounded"
+                >
                   <div className="flex-1">
                     <p className="font-medium">{member.name}</p>
                     <p className="text-sm text-gray-600">{member.role}</p>
                   </div>
-                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                    {member.level}
-                  </span>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-4">No team members yet</p>
+              <p className="text-gray-500 text-center py-4">
+                No team members yet
+              </p>
             )}
           </div>
         </Card>

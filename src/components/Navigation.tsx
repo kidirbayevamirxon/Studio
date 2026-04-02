@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-
+import logo from "../../public/image.png";
 export function Navigation() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -26,11 +26,13 @@ export function Navigation() {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-2xl font-semibold text-gray-900">
-            Azat Studio
+          <Link
+            to="/"
+            className="flex items-center space-x-2 text-2xl font-semibold text-gray-900"
+          >
+            <img src={logo} alt="Azat Studio" className="h-10 w-auto" />
+            <span>Azat Studio</span>
           </Link>
-
-          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <Link
@@ -52,8 +54,6 @@ export function Navigation() {
               Admin
             </Link>
           </div>
-
-          {/* Mobile menu button */}
           <button
             className="md:hidden p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -61,8 +61,6 @@ export function Navigation() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4">
             {navItems.map((item) => (

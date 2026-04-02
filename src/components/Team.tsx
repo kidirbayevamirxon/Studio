@@ -1,5 +1,3 @@
-import { Mail } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useData } from "../contexts/DataContext";
 
 export function Team() {
@@ -20,8 +18,7 @@ export function Team() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
+      <section className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl mb-6">Meet Our Team</h1>
           <p className="text-xl">
@@ -29,14 +26,11 @@ export function Team() {
           </p>
         </div>
       </section>
-
-      {/* Team Members */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member) => {
-            // Agar specialties array bo‘lmasa, bo‘sh array qilamiz
-            const specialtiesArray = Array.isArray(member.specialties)
-              ? member.specialties
+            const specialtiesArray = member.specialties
+              ? member.specialties.split(",").map((s) => s.trim())
               : [];
 
             return (
@@ -44,52 +38,40 @@ export function Team() {
                 key={member.id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
-                <div className="h-80 bg-gray-200 overflow-hidden">
-                  <ImageWithFallback
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                {/* <div className="h-80 bg-gray-200 overflow-hidden"></div> */}
                 <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl">{member.name}</h3>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${getLevelColor(
-                        member.level
-                      )}`}
+                  <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
+                  <p className="text-sm text-gray-500 mb-1">
+                    {member.position}
+                  </p>
+                  <p className="text-blue-600 mb-2">{member.role}</p>
+                  <p className="text-sm text-blue-500 mb-3">
+                    <a
+                      href={`https://t.me/${member.telegram.replace("@", "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      {member.level}
-                    </span>
-                  </div>
-                  <p className="text-blue-600 mb-3">{member.role}</p>
-                  <p className="text-gray-700 text-sm mb-4">{member.bio}</p>
+                      {member.telegram}
+                    </a>
+                  </p>
                   <div className="mb-4">
                     <p className="text-sm mb-2">Specialties:</p>
                     <div className="flex flex-wrap gap-2">
-                      {specialtiesArray.map((specialty, idx) => (
-                        <span
-                          key={idx}
-                          className="text-xs bg-gray-100 px-2 py-1 rounded"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                      {specialtiesArray.length === 0 && (
+                      {specialtiesArray.length > 0 ? (
+                        specialtiesArray.map((specialty, idx) => (
+                          <span
+                            key={idx}
+                            className="text-xs bg-gray-100 px-2 py-1 rounded"
+                          >
+                            {specialty}
+                          </span>
+                        ))
+                      ) : (
                         <span className="text-xs text-gray-400">
                           No specialties listed
                         </span>
                       )}
                     </div>
-                  </div>
-                  <div className="flex items-center text-gray-600 text-sm">
-                    <Mail size={16} className="mr-2" />
-                    <a
-                      href={`mailto:${member.email}`}
-                      className="hover:text-blue-600"
-                    >
-                      {member.email}
-                    </a>
                   </div>
                 </div>
               </div>
@@ -127,7 +109,7 @@ export function Team() {
           </div>
         </div>
       </section> */}
-            <section className="py-16 px-4 max-w-4xl mx-auto">
+      <section className="py-16 px-4 max-w-4xl mx-auto">
         <div className="text-center">
           <h2 className="text-3xl mb-6">Why Our Team Stands Out</h2>
           <p className="text-lg text-gray-700 mb-8">

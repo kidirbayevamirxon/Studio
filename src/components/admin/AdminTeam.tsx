@@ -6,31 +6,34 @@ import { Card } from "../ui/card";
 import { Plus, Edit2, Trash2, X } from "lucide-react";
 
 export function AdminTeam() {
-  const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, loading, error } = useData();
+  const {
+    teamMembers,
+    addTeamMember,
+    updateTeamMember,
+    deleteTeamMember,
+    loading,
+    error,
+  } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState({
     name: "",
+    position: "", // 🔹 qo‘shildi
     role: "",
-    image: "",
-    bio: "",
-    email: "",
-    level: "Mid-Level",
-    specialties: "",
+    specialties: "", // 🔹 string sifatida
+    telegram: "", // 🔹 qo‘shildi
   });
-const resetForm = () => {
-  setFormData({
-    name: "",
-    role: "",
-    image: "",
-    bio: "",
-    email: "",
-    level: "Mid-Level",
-    specialties: "",
-  });
-  setEditingMember(null);
-  setIsModalOpen(false);
-};
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      position: "",
+      role: "",
+      specialties: "",
+      telegram: "",
+    });
+    setEditingMember(null);
+    setIsModalOpen(false);
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -56,9 +59,13 @@ const resetForm = () => {
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const memberData = {
-      ...formData,
-      specialties: formData.specialties.split(",").map((s) => s.trim()),
+      name: formData.name,
+      position: formData.position,
+      role: formData.role,
+      specialties: formData.specialties, // ⚠️ string
+      telegram: formData.telegram,
     };
 
     try {
@@ -77,7 +84,7 @@ const resetForm = () => {
     setEditingMember(member);
     setFormData({
       ...member,
-      specialties: member.specialties.join(", "),
+      specialties: member.specialties,
     });
     setIsModalOpen(true);
   };
@@ -105,27 +112,25 @@ const resetForm = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {teamMembers.map((member) => (
           <Card key={member.id} className="p-6">
-            <img
-              src={member.image}
-              alt={member.name}
-              className="w-full h-48 object-cover rounded-lg mb-4"
-            />
             <h3 className="text-lg font-semibold">{member.name}</h3>
             <p className="text-sm text-gray-600 mb-2">{member.role}</p>
-            <p className="text-xs text-gray-500 mb-2">{member.email}</p>
-            <span className="inline-block text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded mb-3">
-              {member.level}
-            </span>
+            <p className="text-xs text-gray-500 mb-2">{member.position}</p>
+            <p className="text-xs text-gray-500 mb-2">{member.telegram}</p>
+
             <div className="flex space-x-2">
-              <Button size="sm" variant="outline" onClick={() => handleEdit(member)}>
+              {/* <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleEdit(member)}
+              >
                 <Edit2 size={14} className="mr-1" />
                 Edit
-              </Button>
+              </Button> */}
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => handleDelete(member.id)}
-                className="text-red-600 hover:text-red-700"
+                className="text-red-600 hover:text-red-700 px-4 py-2"
               >
                 <Trash2 size={14} className="mr-1" />
                 Delete
@@ -152,7 +157,9 @@ const resetForm = () => {
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <Input
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -161,62 +168,47 @@ const resetForm = () => {
                 <label className="block text-sm font-medium mb-1">Role</label>
                 <Input
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
                   required
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
+                <label className="block text-sm font-medium mb-1">
+                  Position
+                </label>
                 <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Image URL</label>
-                <Input
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Level</label>
-                <select
-                  value={formData.level}
-                  onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                >
-                  <option>Junior</option>
-                  <option>Mid-Level</option>
-                  <option>Senior</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Bio</label>
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                  rows={3}
+                  value={formData.position}
+                  onChange={(e) =>
+                    setFormData({ ...formData, position: e.target.value })
+                  }
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">
+                  Telegram
+                </label>
+                <Input
+                  value={formData.telegram}
+                  onChange={(e) =>
+                    setFormData({ ...formData, telegram: e.target.value })
+                  }
+                  placeholder="@username"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
                   Specialties (comma-separated)
                 </label>
                 <Input
                   value={formData.specialties}
-                  onChange={(e) => setFormData({ ...formData, specialties: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, specialties: e.target.value })
+                  }
                   placeholder="Video Editing, Color Grading, Sound Design"
                   required
                 />

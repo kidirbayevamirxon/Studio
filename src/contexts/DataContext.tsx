@@ -11,12 +11,10 @@ import { axiosInstance } from "../api/api";
 export interface TeamMember {
   id: string;
   name: string;
+  position: string;
   role: string;
-  image: string;
-  bio: string;
-  email: string;
-  level: string;
-  specialties: string[];
+  specialties: string; 
+  telegram: string;
 }
 export interface Project {
   id: number;
@@ -30,9 +28,6 @@ export interface Project {
   video_id: string;
   url: string;
 }
-type CreateProjectPayload = {
-  url: string;
-};
 export interface Service {
   id: string;
   title: string;
@@ -41,24 +36,38 @@ export interface Service {
   duration_hours: number;
 }
 
+type CreateProjectPayload = {
+  url: string;
+};
+
+type UpdateProjectPayload = {
+  title: string;
+  thumbnail: string;
+  duration: number;
+};
+
 interface DataContextType {
   teamMembers: TeamMember[];
   projects: Project[];
   services: Service[];
   loading: boolean;
   error: string | null;
+
   addTeamMember: (member: Omit<TeamMember, "id">) => Promise<void>;
   updateTeamMember: (
     id: string,
     member: Omit<TeamMember, "id">,
   ) => Promise<void>;
   deleteTeamMember: (id: string) => Promise<void>;
+
   addProject: (project: CreateProjectPayload) => Promise<void>;
-  updateProject: (id: string, project: CreateProjectPayload) => Promise<void>;
+  updateProject: (id: string, project: UpdateProjectPayload) => Promise<void>; // <-- bu o‘zgardi
   deleteProject: (id: string) => Promise<void>;
+
   addService: (service: Omit<Service, "id">) => Promise<void>;
   updateService: (id: string, service: Omit<Service, "id">) => Promise<void>;
   deleteService: (id: string) => Promise<void>;
+
   refreshData: () => Promise<void>;
 }
 
@@ -150,46 +159,48 @@ export function DataProvider({ children }: { children: ReactNode }) {
       throw err;
     }
   };
-function getVideoIdUrl(url: string): string {
-  try {
-    const parsed = new URL(url);
-    const videoId = parsed.searchParams.get("v");
-    if (!videoId) return url; 
-    return `https://www.youtube.com/watch?v=${videoId}`; 
-  } catch {
-    return url; 
+  function getVideoIdUrl(url: string): string {
+    try {
+      const parsed = new URL(url);
+      const videoId = parsed.searchParams.get("v");
+      if (!videoId) return url;
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    } catch {
+      return url;
+    }
   }
-}
-const addProject = async ({ url }: { url: string }) => {
-  const cleanUrl = getVideoIdUrl(url); // shu yerda list va index olib tashlanadi
-  const response = await axiosInstance.post(`/yt/?url=${encodeURIComponent(cleanUrl)}`);
-  setProjects((prev) => [...prev, response.data]);
-};
-
-const updateProject = async (
-  video_id: string,
-  payload: { title: string; thumbnail: string; duration: number }
-) => {
-  try {
-    const response = await axiosInstance.patch(`/yt/${video_id}`, payload);
-    const updatedProject = response.data;
-    setProjects((prev) =>
-      prev.map((p) => (p.video_id === video_id ? updatedProject : p))
+  const addProject = async ({ url }: { url: string }) => {
+    const cleanUrl = getVideoIdUrl(url); // shu yerda list va index olib tashlanadi
+    const response = await axiosInstance.post(
+      `/yt/?url=${encodeURIComponent(cleanUrl)}`,
     );
-  } catch (err: any) {
-    setError(err.response?.data?.message || "Failed to update project");
-    throw err;
-  }
-};
-const deleteProject = async (video_id: string) => {
-  try {
-    await axiosInstance.delete(`/yt/${video_id}`);
-    setProjects((prev) => prev.filter((p) => p.video_id !== video_id));
-  } catch (err: any) {
-    setError(err.response?.data?.message || "Failed to delete project");
-    throw err;
-  }
-};
+    setProjects((prev) => [...prev, response.data]);
+  };
+
+  const updateProject = async (
+    video_id: string,
+    payload: UpdateProjectPayload,
+  ) => {
+    try {
+      const response = await axiosInstance.patch(`/yt/${video_id}`, payload);
+      const updatedProject = response.data;
+      setProjects((prev) =>
+        prev.map((p) => (p.video_id === video_id ? updatedProject : p)),
+      );
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to update project");
+      throw err;
+    }
+  };
+  const deleteProject = async (video_id: string) => {
+    try {
+      await axiosInstance.delete(`/yt/${video_id}`);
+      setProjects((prev) => prev.filter((p) => p.video_id !== video_id));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to delete project");
+      throw err;
+    }
+  };
   const addService = async (service: Omit<Service, "id">) => {
     try {
       const response = await axiosInstance.post("/services/", service);
