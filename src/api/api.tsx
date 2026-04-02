@@ -13,41 +13,41 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
-    }
+   const accessToken = localStorage.getItem("accessToken");
+if (accessToken) {
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+}
     return config;
   },
   (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      console.log("401 xatolik aniqlangan, tokenni yangilashga urinish...");
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        logoutUser(); // token yo'q → loginga
+        return Promise.reject(error);
+      }
+
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) throw new Error("Refresh token topilmadi");
-
         const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
-
-        const accessToken = response.data.accessToken;
-        localStorage.setItem("accessToken", accessToken);
-
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
-        return axiosInstance(originalRequest);
+        const newAccessToken = response.data.accessToken;
+        localStorage.setItem("accessToken", newAccessToken);
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+        return axiosInstance(originalRequest); // requestni qayta yuborish
       } catch (refreshError) {
-        console.error("Token yangilash xatolik:", refreshError);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        logoutUser(); // refresh token xato bo‘lsa → login
         return Promise.reject(refreshError);
       }
     }

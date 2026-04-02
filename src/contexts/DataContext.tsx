@@ -1,5 +1,11 @@
 // contexts/DataContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { axiosInstance } from "../api/api";
 
 export interface TeamMember {
@@ -13,23 +19,26 @@ export interface TeamMember {
   specialties: string[];
 }
 export interface Project {
-  id: string;
+  id: number;
   title: string;
   thumbnail: string;
   embed_url: string;
   description: string;
-  duration: number; 
+  duration: number;
   created_at: string;
-  location?: string; 
+  location?: string;
   video_id: string;
+  url: string;
 }
-
+type CreateProjectPayload = {
+  url: string;
+};
 export interface Service {
   id: string;
   title: string;
   description: string;
-  price: string;
   features: string[];
+  duration_hours: number;
 }
 
 interface DataContextType {
@@ -39,10 +48,13 @@ interface DataContextType {
   loading: boolean;
   error: string | null;
   addTeamMember: (member: Omit<TeamMember, "id">) => Promise<void>;
-  updateTeamMember: (id: string, member: Omit<TeamMember, "id">) => Promise<void>;
+  updateTeamMember: (
+    id: string,
+    member: Omit<TeamMember, "id">,
+  ) => Promise<void>;
   deleteTeamMember: (id: string) => Promise<void>;
-  addProject: (project: Omit<Project, "id">) => Promise<void>;
-  updateProject: (id: string, project: Omit<Project, "id">) => Promise<void>;
+  addProject: (project: CreateProjectPayload) => Promise<void>;
+  updateProject: (id: string, project: CreateProjectPayload) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
   addService: (service: Omit<Service, "id">) => Promise<void>;
   updateService: (id: string, service: Omit<Service, "id">) => Promise<void>;
@@ -66,7 +78,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const refreshData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const [teamRes, projectsRes, servicesRes] = await Promise.all([
         axiosInstance.get("/team/"),
@@ -75,8 +87,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
       ]);
       const extractData = (response: any): any[] => {
         if (Array.isArray(response)) return response;
-        if (response?.data && Array.isArray(response.data)) return response.data;
-        if (response?.items && Array.isArray(response.items)) return response.items;
+        if (response?.data && Array.isArray(response.data))
+          return response.data;
+        if (response?.items && Array.isArray(response.items))
+          return response.items;
         return [];
       };
 
@@ -89,7 +103,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setServices(servicesData);
     } catch (err: any) {
       console.error("API Error Details:", err);
-      setError(err.response?.data?.message || err.message || "Failed to load data from server");
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to load data from server",
+      );
       setTeamMembers([]);
       setProjects([]);
       setServices([]);
@@ -101,17 +119,22 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const addTeamMember = async (member: Omit<TeamMember, "id">) => {
     try {
       const response = await axiosInstance.post("/team/", member);
-      setTeamMembers(prev => [...prev, response.data]);
+      setTeamMembers((prev) => [...prev, response.data]);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to add team member");
       throw err;
     }
   };
 
-  const updateTeamMember = async (id: string, member: Omit<TeamMember, "id">) => {
+  const updateTeamMember = async (
+    id: string,
+    member: Omit<TeamMember, "id">,
+  ) => {
     try {
       const response = await axiosInstance.patch(`/team/${id}`, member);
-      setTeamMembers(prev => prev.map(m => m.id === id ? response.data : m));
+      setTeamMembers((prev) =>
+        prev.map((m) => (m.id === id ? response.data : m)),
+      );
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to update team member");
       throw err;
@@ -121,46 +144,56 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const deleteTeamMember = async (id: string) => {
     try {
       await axiosInstance.delete(`/team/${id}`);
-      setTeamMembers(prev => prev.filter(m => m.id !== id));
+      setTeamMembers((prev) => prev.filter((m) => m.id !== id));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete team member");
       throw err;
     }
   };
-  const addProject = async (project: Omit<Project, "id">) => {
-    try {
-      const response = await axiosInstance.post("/yt/", project);
-      setProjects(prev => [...prev, response.data]);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to add project");
-      throw err;
-    }
-  };
+function getVideoIdUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const videoId = parsed.searchParams.get("v");
+    if (!videoId) return url; 
+    return `https://www.youtube.com/watch?v=${videoId}`; 
+  } catch {
+    return url; 
+  }
+}
+const addProject = async ({ url }: { url: string }) => {
+  const cleanUrl = getVideoIdUrl(url); // shu yerda list va index olib tashlanadi
+  const response = await axiosInstance.post(`/yt/?url=${encodeURIComponent(cleanUrl)}`);
+  setProjects((prev) => [...prev, response.data]);
+};
 
-  const updateProject = async (id: string, project: Omit<Project, "id">) => {
-    try {
-      const response = await axiosInstance.patch(`/yt/${id}`, project);
-      setProjects(prev => prev.map(p => p.id === id ? response.data : p));
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to update project");
-      throw err;
-    }
-  };
-
-  const deleteProject = async (id: string) => {
-    try {
-      await axiosInstance.delete(`/yt/${id}`);
-      setProjects(prev => prev.filter(p => p.id !== id));
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to delete project");
-      throw err;
-    }
-  };
-
+const updateProject = async (
+  video_id: string,
+  payload: { title: string; thumbnail: string; duration: number }
+) => {
+  try {
+    const response = await axiosInstance.patch(`/yt/${video_id}`, payload);
+    const updatedProject = response.data;
+    setProjects((prev) =>
+      prev.map((p) => (p.video_id === video_id ? updatedProject : p))
+    );
+  } catch (err: any) {
+    setError(err.response?.data?.message || "Failed to update project");
+    throw err;
+  }
+};
+const deleteProject = async (video_id: string) => {
+  try {
+    await axiosInstance.delete(`/yt/${video_id}`);
+    setProjects((prev) => prev.filter((p) => p.video_id !== video_id));
+  } catch (err: any) {
+    setError(err.response?.data?.message || "Failed to delete project");
+    throw err;
+  }
+};
   const addService = async (service: Omit<Service, "id">) => {
     try {
       const response = await axiosInstance.post("/services/", service);
-      setServices(prev => [...prev, response.data]);
+      setServices((prev) => [...prev, response.data]);
       await refreshData();
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to add service");
@@ -171,7 +204,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const updateService = async (id: string, service: Omit<Service, "id">) => {
     try {
       const response = await axiosInstance.patch(`/services/${id}`, service);
-      setServices(prev => prev.map(s => s.id === id ? response.data : s));
+      setServices((prev) => prev.map((s) => (s.id === id ? response.data : s)));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to update service");
       throw err;
@@ -181,7 +214,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const deleteService = async (id: string) => {
     try {
       await axiosInstance.delete(`/services/${id}`);
-      setServices(prev => prev.filter(s => s.id !== id));
+      setServices((prev) => prev.filter((s) => s.id !== id));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete service");
       throw err;

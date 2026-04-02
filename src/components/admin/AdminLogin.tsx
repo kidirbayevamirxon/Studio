@@ -12,24 +12,28 @@ export function AdminLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
 
-  try {
-    const res = await axiosInstance.post("/auth/login", {
-      login: username,
-      password: password,
-    });
-    const { accessToken, refreshToken } = res.data;
-    localStorage.setItem("refreshToken", refreshToken);
-    login(accessToken);
-    navigate("/admin/dashboard");
-  } catch (err: any) {
-    console.error(err);
-    setError(err.response?.data?.message || "Login failed");
-  }
-};
+    try {
+      const res = await axiosInstance.post("/auth/login", {
+        login: username,
+        password: password,
+      });
+
+      const { access_token, refresh_token } = res.data;
+
+      localStorage.setItem("accessToken", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+
+      login(access_token);
+      navigate("/admin/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || "Login failed");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-50 to-purple-50">

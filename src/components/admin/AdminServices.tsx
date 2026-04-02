@@ -12,15 +12,18 @@ export function AdminServices() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    price: "",
     features: "",
+    duration_hours: 0,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     const serviceData = {
-      ...formData,
+      title: formData.title,
+      description: formData.description,
       features: formData.features.split("\n").filter((f) => f.trim()),
+      duration_hours: Number(formData.duration_hours) || 0,
     };
 
     if (editingService) {
@@ -35,8 +38,8 @@ export function AdminServices() {
     setFormData({
       title: "",
       description: "",
-      price: "",
       features: "",
+      duration_hours: 0, // qo‘shildi
     });
     setEditingService(null);
     setIsModalOpen(false);
@@ -45,8 +48,10 @@ export function AdminServices() {
   const handleEdit = (service: Service) => {
     setEditingService(service);
     setFormData({
-      ...service,
+      title: service.title,
+      description: service.description,
       features: service.features.join("\n"),
+      duration_hours: service.duration_hours || 0,
     });
     setIsModalOpen(true);
   };
@@ -70,18 +75,27 @@ export function AdminServices() {
         {services.map((service) => (
           <Card key={service.id} className="p-6">
             <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-            <p className="text-2xl font-bold text-pink-600 mb-3">{service.price}</p>
             <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+            <p className="text-lg font-bold text-pink-600 mb-3">
+              {service.duration_hours} hours
+            </p>
             <ul className="space-y-2 mb-4">
               {service.features.map((feature, idx) => (
-                <li key={idx} className="text-sm text-gray-700 flex items-start">
+                <li
+                  key={idx}
+                  className="text-sm text-gray-700 flex items-start"
+                >
                   <span className="text-pink-500 mr-2">✓</span>
                   {feature}
                 </li>
               ))}
             </ul>
             <div className="flex space-x-2">
-              <Button size="sm" variant="outline" onClick={() => handleEdit(service)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleEdit(service)}
+              >
                 <Edit2 size={14} className="mr-1" />
                 Edit
               </Button>
@@ -116,27 +130,41 @@ export function AdminServices() {
                 <label className="block text-sm font-medium mb-1">Title</label>
                 <Input
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   placeholder="Premium Package"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Price</label>
+                <label className="block text-sm font-medium mb-1">
+                  Duration Hours
+                </label>
                 <Input
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="$4,500"
+                  type="number"
+                  value={formData.duration_hours}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      duration_hours: Number(e.target.value),
+                    })
+                  }
+                  placeholder="8"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
                 <Input
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   placeholder="Our most popular choice"
                   required
                 />
@@ -148,7 +176,9 @@ export function AdminServices() {
                 </label>
                 <textarea
                   value={formData.features}
-                  onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, features: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded-md"
                   rows={6}
                   placeholder="8 hours coverage&#10;2 videographers&#10;Highlight + Full ceremony&#10;Drone footage&#10;Same-day edit"
