@@ -25,15 +25,15 @@ export function Projects() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Download failed:", err);
-      alert("Failed to download video. Please try again.");
+      console.error("Yuklab olishda xatolik:", err);
+      alert("Video yuklab olinmadi. Iltimos, qayta urinib ko‘ring.");
     } finally {
       setDownloadingId(null);
     }
   };
 
   const handlePlayVideo = (projectId: string) => {
-    console.log("Toggle play video:", projectId);
+    console.log("Video ijro qilish:", projectId);
     setPlayingId((prev) => (prev === projectId ? null : projectId));
   };
 
@@ -48,7 +48,7 @@ export function Projects() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading projects...</p>
+          <p className="text-gray-600">Loyihalar yuklanmoqda...</p>
         </div>
       </div>
     );
@@ -63,7 +63,7 @@ export function Projects() {
             onClick={refreshData}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Try Again
+            Qayta urinib ko‘rish
           </button>
         </div>
       </div>
@@ -74,32 +74,32 @@ export function Projects() {
     <div className="min-h-screen">
       <section className="bg-linear-to-r from-pink-600 to-purple-600 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl mb-6">Our Projects</h1>
+          <h1 className="text-4xl md:text-5xl mb-6">Loyihalarimiz</h1>
           <p className="text-xl">
-            Explore our portfolio of beautiful wedding videos
+            Chiroyli to‘y videolarimiz portfolyosini ko‘ring
           </p>
         </div>
       </section>
 
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl mb-2">Recent Work</h2>
+          <h2 className="text-3xl mb-2">So‘nggi ishlar</h2>
           <p className="text-gray-600">
-            Here are some of our latest projects. Each one tells a unique story.
+            Bu yerda bizning eng so‘nggi loyihalarimiz. Har biri o‘ziga xos hikoya.
           </p>
         </div>
 
         {projects.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">
-              No projects available yet. Check back soon!
+              Hozircha loyihalar mavjud emas. Tez orada qo‘shiladi!
             </p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
               <div
-                key={project.video_id} 
+                key={project.video_id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
                 <div className="relative h-64 bg-gray-200 overflow-hidden group">
@@ -107,7 +107,7 @@ export function Projects() {
                     <iframe
                       width="100%"
                       height="100%"
-                      src={`https://www.youtube.com/embed/${project.video_id}`} // ✅ embed URL
+                      src={`https://www.youtube.com/embed/${project.video_id}`}
                       title={project.title}
                       frameBorder="0"
                       allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -141,10 +141,10 @@ export function Projects() {
                   </h3>
                   <div className="text-sm text-gray-600 mb-1">
                     {new Date(project.created_at).toLocaleDateString()} •
-                    Unknown
+                    Noma’lum
                   </div>
                   <p className="text-gray-700 text-sm mb-4 line-clamp-2">
-                    {project.description || "No description provided"}
+                    {project.description || "Tavsif mavjud emas"}
                   </p>
                   <div className="flex gap-2">
                     <button
@@ -159,7 +159,7 @@ export function Projects() {
                       ) : (
                         <Download size={16} />
                       )}
-                      Download
+                      Yuklab olish
                     </button>
                   </div>
                 </div>

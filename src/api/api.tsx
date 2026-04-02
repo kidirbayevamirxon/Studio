@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
 
       const refreshToken = localStorage.getItem("refreshToken");
       if (!refreshToken) {
-        logoutUser(); // token yo'q → loginga
+        logoutUser(); 
         return Promise.reject(error);
       }
 
@@ -45,9 +45,9 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = response.data.accessToken;
         localStorage.setItem("accessToken", newAccessToken);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest); // requestni qayta yuborish
+        return axiosInstance(originalRequest); 
       } catch (refreshError) {
-        logoutUser(); // refresh token xato bo‘lsa → login
+        logoutUser(); 
         return Promise.reject(refreshError);
       }
     }

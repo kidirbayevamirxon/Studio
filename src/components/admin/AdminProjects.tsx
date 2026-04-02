@@ -31,7 +31,7 @@ export function AdminProjects() {
   };
   const handleEdit = (project: Project) => {
     if (!project.video_id) {
-      console.error("Project video_id is missing!", project);
+      console.error("video_id topilmadi!", project);
       return;
     }
     setEditingProject(project);
@@ -55,21 +55,21 @@ export function AdminProjects() {
       } else if (!editingProject) {
         await addProject({ url });
       } else {
-        throw new Error("Editing project video_id is undefined!");
+        throw new Error("video_id aniqlanmadi!");
       }
       resetForm();
     } catch (err) {
-      console.error("Failed to save project:", err);
+      console.error("Loyihani saqlashda xatolik:", err);
     } finally {
       setIsSubmitting(false);
     }
   };
   const handleDelete = async (video_id: string) => {
-    if (confirm("Are you sure you want to delete this project?")) {
+    if (confirm("Haqiqatan ham bu loyihani o‘chirmoqchimisiz?")) {
       try {
-        await deleteProject(video_id); // string video_id
+        await deleteProject(video_id);
       } catch (err) {
-        console.error("Failed to delete project:", err);
+        console.error("O‘chirishda xatolik:", err);
       }
     }
   };
@@ -78,7 +78,7 @@ export function AdminProjects() {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading projects...</p>
+          <p className="mt-4 text-gray-600">Loyihalar yuklanmoqda...</p>
         </div>
       </div>
     );
@@ -93,7 +93,7 @@ export function AdminProjects() {
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2 mx-auto"
         >
           <RefreshCw size={16} />
-          Retry
+          Qayta urinib ko‘rish
         </button>
       </div>
     );
@@ -103,97 +103,108 @@ export function AdminProjects() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Project Management</h2>
+          <h2 className="text-2xl font-bold">Loyihalarni boshqarish</h2>
           <p className="text-sm text-gray-600 mt-1">
-            Total: {projects?.length || 0} projects
+            Jami: {projects?.length || 0} ta loyiha
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
           <Plus size={16} className="mr-2" />
-          Add Project
+          Loyiha qo‘shish
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects?.map((project) => (
-  <Card
-    key={project.id}
-    className="p-6 hover:shadow-lg transition-shadow"
-  >
-    <div className="relative h-48 w-full bg-gray-200 overflow-hidden group">
-      {editingProject?.video_id === project.video_id ? (
-        <iframe
-          width="100%"
-          height="100%"
-          src={`https://www.youtube.com/embed/${project.video_id}`}
-          title={project.title}
-          frameBorder="0"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <>
-          <img
-            src={project.thumbnail}
-            alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            onError={(e) =>
-              (e.currentTarget.src =
-                "https://via.placeholder.com/400x300?text=No+Image")
-            }
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
-            <button
-              onClick={() =>
-                setEditingProject(project.video_id ? project : null)
-              }
-              className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-blue-600 rounded-full p-2 hover:bg-blue-600 hover:text-white"
-            >
-              <Play size={24} fill="currentColor" />
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+        {projects?.map((project) => (
+          <Card
+            key={project.id}
+            className="p-6 hover:shadow-lg transition-shadow"
+          >
+            <div className="relative h-48 w-full bg-gray-200 overflow-hidden group">
+              {editingProject?.video_id === project.video_id ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${project.video_id}`}
+                  title={project.title}
+                  frameBorder="0"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <>
+                  <img
+                    src={project.thumbnail}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) =>
+                      (e.currentTarget.src =
+                        "https://via.placeholder.com/400x300?text=Rasm+yo‘q")
+                    }
+                  />
 
-    <h3 className="text-lg font-semibold mb-2 mt-4">{project.title}</h3>
-    <p className="text-sm text-gray-600 mb-1">📍 {project.location}</p>
-    <p className="text-sm text-gray-600 mb-2">
-      📅 {new Date(project.created_at).toLocaleDateString()}
-    </p>
-    <p className="text-sm text-gray-700 mb-3 line-clamp-2">
-      {project.description}
-    </p>
-    <p className="text-xs text-gray-500 mb-3">
-      Duration: {project.duration}
-    </p>
-    <div className="flex space-x-2">
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={() => handleEdit(project)}
-        className="flex-1"
-      >
-        <Edit2 size={14} className="mr-1" />
-        Edit
-      </Button>
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={() => handleDelete(project.video_id)}
-        className="text-red-600 hover:text-red-700 flex-1"
-      >
-        <Trash2 size={14} className="mr-1" />
-        Delete
-      </Button>
-    </div>
-  </Card>
-))}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
+                    <button
+                      onClick={() =>
+                        setEditingProject(project.video_id ? project : null)
+                      }
+                      className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-blue-600 rounded-full p-2 hover:bg-blue-600 hover:text-white"
+                    >
+                      <Play size={24} fill="currentColor" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <h3 className="text-lg font-semibold mb-2 mt-4">
+              {project.title}
+            </h3>
+
+            <p className="text-sm text-gray-600 mb-1">
+              📍 {project.location}
+            </p>
+
+            <p className="text-sm text-gray-600 mb-2">
+              📅 {new Date(project.created_at).toLocaleDateString()}
+            </p>
+
+            <p className="text-sm text-gray-700 mb-3 line-clamp-2">
+              {project.description}
+            </p>
+
+            <p className="text-xs text-gray-500 mb-3">
+              Davomiyligi: {project.duration}
+            </p>
+
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleEdit(project)}
+                className="flex-1"
+              >
+                <Edit2 size={14} className="mr-1" />
+                Tahrirlash
+              </Button>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDelete(project.video_id)}
+                className="text-red-600 hover:text-red-700 flex-1"
+              >
+                <Trash2 size={14} className="mr-1" />
+                O‘chirish
+              </Button>
+            </div>
+          </Card>
+        ))}
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">Edit Project</h3>
+              <h3 className="text-xl font-bold">Loyihani tahrirlash</h3>
               <button onClick={resetForm} disabled={isSubmitting}>
                 <X size={24} />
               </button>
@@ -201,7 +212,7 @@ export function AdminProjects() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Title *
+                  Sarlavha *
                 </label>
                 <Input
                   value={title}
@@ -223,7 +234,7 @@ export function AdminProjects() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Duration (hours) *
+                  Davomiyligi (soat) *
                 </label>
                 <Input
                   type="number"
@@ -239,7 +250,7 @@ export function AdminProjects() {
                   className="flex-1"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Saving..." : "Update Project"}
+                  {isSubmitting ? "Saqlanmoqda..." : "Yangilash"}
                 </Button>
                 <Button
                   type="button"
@@ -247,7 +258,7 @@ export function AdminProjects() {
                   onClick={resetForm}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  Bekor qilish
                 </Button>
               </div>
             </form>

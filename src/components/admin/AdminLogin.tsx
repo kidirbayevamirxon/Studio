@@ -31,7 +31,7 @@ export function AdminLogin() {
       navigate("/admin/dashboard");
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Kirish muvaffaqiyatsiz yakunlandi");
     }
   };
 
@@ -39,22 +39,22 @@ export function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-50 to-purple-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-center mb-2">Azat Studio</h1>
-        <p className="text-center text-gray-600 mb-8">Admin Panel</p>
+        <p className="text-center text-gray-600 mb-8">Admin paneli</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Username</label>
+            <label className="block text-sm font-medium mb-1">Foydalanuvchi nomi</label>
             <Input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
+              placeholder="Foydalanuvchi nomi"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1">Parol</label>
             <Input
               type="password"
               value={password}
@@ -65,7 +65,7 @@ export function AdminLogin() {
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <Button type="submit" className="w-full">
-            Login
+            Kirish
           </Button>
         </form>
       </div>

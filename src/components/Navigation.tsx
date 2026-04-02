@@ -7,12 +7,12 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About Us" },
-    { path: "/services", label: "Services" },
-    { path: "/team", label: "Team" },
-    { path: "/projects", label: "Projects" },
-    { path: "/contact", label: "Contact" },
+    { path: "/", label: "Bosh sahifa" },
+    { path: "/about", label: "Biz haqimizda" },
+    { path: "/services", label: "Xizmatlar" },
+    { path: "/team", label: "Jamoa" },
+    { path: "/projects", label: "Loyihalar" },
+    { path: "/contact", label: "Bog‘lanish" },
   ];
 
   const isActive = (path: string) => {

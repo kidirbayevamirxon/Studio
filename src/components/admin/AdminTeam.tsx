@@ -18,11 +18,12 @@ export function AdminTeam() {
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    position: "", // 🔹 qo‘shildi
+    position: "",
     role: "",
-    specialties: "", // 🔹 string sifatida
-    telegram: "", // 🔹 qo‘shildi
+    specialties: "",
+    telegram: "",
   });
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -39,7 +40,7 @@ export function AdminTeam() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading team members...</p>
+          <p className="mt-4 text-gray-600">Jamoa a’zolari yuklanmoqda...</p>
         </div>
       </div>
     );
@@ -52,7 +53,7 @@ export function AdminTeam() {
           onClick={() => window.location.reload()}
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
         >
-          Try Again
+          Qayta urinish
         </button>
       </div>
     );
@@ -64,7 +65,7 @@ export function AdminTeam() {
       name: formData.name,
       position: formData.position,
       role: formData.role,
-      specialties: formData.specialties, // ⚠️ string
+      specialties: formData.specialties,
       telegram: formData.telegram,
     };
 
@@ -76,7 +77,7 @@ export function AdminTeam() {
       }
       resetForm();
     } catch (err) {
-      console.error("Failed to save team member:", err);
+      console.error("Jamoa a’zosi saqlanmadi:", err);
     }
   };
 
@@ -90,11 +91,11 @@ export function AdminTeam() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this team member?")) {
+    if (confirm("Bu jamoa a’zosini o‘chirmoqchimisiz?")) {
       try {
         await deleteTeamMember(id);
       } catch (err) {
-        console.error("Failed to delete team member:", err);
+        console.error("Jamoa a’zosi o‘chirilmadi:", err);
       }
     }
   };
@@ -102,10 +103,10 @@ export function AdminTeam() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Team Management</h2>
+        <h2 className="text-2xl font-bold">Jamoa boshqaruvi</h2>
         <Button onClick={() => setIsModalOpen(true)}>
           <Plus size={16} className="mr-2" />
-          Add Team Member
+          Jamoa a’zosini qo‘shish
         </Button>
       </div>
 
@@ -113,19 +114,11 @@ export function AdminTeam() {
         {teamMembers.map((member) => (
           <Card key={member.id} className="p-6">
             <h3 className="text-lg font-semibold">{member.name}</h3>
-            <p className="text-sm text-gray-600 mb-2">{member.role}</p>
-            <p className="text-xs text-gray-500 mb-2">{member.position}</p>
-            <p className="text-xs text-gray-500 mb-2">{member.telegram}</p>
+            <p className="text-sm text-gray-600 mb-2">Roli: {member.role}</p>
+            <p className="text-xs text-gray-500 mb-2">Lavozimi: {member.position}</p>
+            <p className="text-xs text-gray-500 mb-2">Telegram: {member.telegram}</p>
 
             <div className="flex space-x-2">
-              {/* <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleEdit(member)}
-              >
-                <Edit2 size={14} className="mr-1" />
-                Edit
-              </Button> */}
               <Button
                 size="sm"
                 variant="outline"
@@ -133,7 +126,7 @@ export function AdminTeam() {
                 className="text-red-600 hover:text-red-700 px-4 py-2"
               >
                 <Trash2 size={14} className="mr-1" />
-                Delete
+                O‘chirish
               </Button>
             </div>
           </Card>
@@ -145,7 +138,7 @@ export function AdminTeam() {
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">
-                {editingMember ? "Edit Team Member" : "Add Team Member"}
+                {editingMember ? "Jamoa a’zosini tahrirlash" : "Jamoa a’zosini qo‘shish"}
               </h3>
               <button onClick={resetForm}>
                 <X size={24} />
@@ -154,7 +147,7 @@ export function AdminTeam() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1">Ism</label>
                 <Input
                   value={formData.name}
                   onChange={(e) =>
@@ -165,7 +158,7 @@ export function AdminTeam() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Role</label>
+                <label className="block text-sm font-medium mb-1">Roli</label>
                 <Input
                   value={formData.role}
                   onChange={(e) =>
@@ -175,9 +168,7 @@ export function AdminTeam() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Position
-                </label>
+                <label className="block text-sm font-medium mb-1">Lavozimi</label>
                 <Input
                   value={formData.position}
                   onChange={(e) =>
@@ -188,9 +179,7 @@ export function AdminTeam() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Telegram
-                </label>
+                <label className="block text-sm font-medium mb-1">Telegram</label>
                 <Input
                   value={formData.telegram}
                   onChange={(e) =>
@@ -202,24 +191,24 @@ export function AdminTeam() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Specialties (comma-separated)
+                  Mutaxassisliklar (vergul bilan ajrating)
                 </label>
                 <Input
                   value={formData.specialties}
                   onChange={(e) =>
                     setFormData({ ...formData, specialties: e.target.value })
                   }
-                  placeholder="Video Editing, Color Grading, Sound Design"
+                  placeholder="Video montaj, Rang berish, Ovozni tahrirlash"
                   required
                 />
               </div>
 
               <div className="flex space-x-2">
                 <Button type="submit" className="flex-1">
-                  {editingMember ? "Update" : "Add"} Team Member
+                  {editingMember ? "Yangilash" : "Qo‘shish"} A’zo
                 </Button>
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancel
+                  Bekor qilish
                 </Button>
               </div>
             </form>

@@ -39,7 +39,7 @@ export function AdminServices() {
       title: "",
       description: "",
       features: "",
-      duration_hours: 0, // qo‘shildi
+      duration_hours: 0,
     });
     setEditingService(null);
     setIsModalOpen(false);
@@ -56,7 +56,7 @@ export function AdminServices() {
     setIsModalOpen(true);
   };
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this service?")) {
+    if (confirm("Haqiqatan ham bu xizmatni o‘chirmoqchimisiz?")) {
       deleteService(id);
     }
   };
@@ -64,10 +64,10 @@ export function AdminServices() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Service Management</h2>
+        <h2 className="text-2xl font-bold">Xizmatlarni boshqarish</h2>
         <Button onClick={() => setIsModalOpen(true)}>
           <Plus size={16} className="mr-2" />
-          Add Service
+          Xizmat qo‘shish
         </Button>
       </div>
 
@@ -77,7 +77,7 @@ export function AdminServices() {
             <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
             <p className="text-sm text-gray-600 mb-4">{service.description}</p>
             <p className="text-lg font-bold text-pink-600 mb-3">
-              {service.duration_hours} hours
+              {service.duration_hours} soat
             </p>
             <ul className="space-y-2 mb-4">
               {service.features.map((feature, idx) => (
@@ -97,7 +97,7 @@ export function AdminServices() {
                 onClick={() => handleEdit(service)}
               >
                 <Edit2 size={14} className="mr-1" />
-                Edit
+                Tahrirlash
               </Button>
               <Button
                 size="sm"
@@ -106,7 +106,7 @@ export function AdminServices() {
                 className="text-red-600 hover:text-red-700"
               >
                 <Trash2 size={14} className="mr-1" />
-                Delete
+                O‘chirish
               </Button>
             </div>
           </Card>
@@ -118,7 +118,7 @@ export function AdminServices() {
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">
-                {editingService ? "Edit Service" : "Add Service"}
+                {editingService ? "Xizmatni tahrirlash" : "Xizmat qo‘shish"}
               </h3>
               <button onClick={resetForm}>
                 <X size={24} />
@@ -127,20 +127,20 @@ export function AdminServices() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Title</label>
+                <label className="block text-sm font-medium mb-1">Sarlavha</label>
                 <Input
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  placeholder="Premium Package"
+                  placeholder="Premium Paket"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Duration Hours
+                  Davomiyligi (soat)
                 </label>
                 <Input
                   type="number"
@@ -158,21 +158,21 @@ export function AdminServices() {
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Description
+                  Tavsif
                 </label>
                 <Input
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  placeholder="Our most popular choice"
+                  placeholder="Eng mashhur paketimiz"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Features (one per line)
+                  Xususiyatlar (har biri yangi qatorda)
                 </label>
                 <textarea
                   value={formData.features}
@@ -181,17 +181,17 @@ export function AdminServices() {
                   }
                   className="w-full px-3 py-2 border rounded-md"
                   rows={6}
-                  placeholder="8 hours coverage&#10;2 videographers&#10;Highlight + Full ceremony&#10;Drone footage&#10;Same-day edit"
+                  placeholder="8 soat xizmat&#10;2 videograf&#10;Highlight + To‘liq marosim&#10;Drone footage&#10;Kunning o‘zida tahrir"
                   required
                 />
               </div>
 
               <div className="flex space-x-2">
                 <Button type="submit" className="flex-1">
-                  {editingService ? "Update" : "Add"} Service
+                  {editingService ? "Yangilash" : "Qo‘shish"}
                 </Button>
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancel
+                  Bekor qilish
                 </Button>
               </div>
             </form>

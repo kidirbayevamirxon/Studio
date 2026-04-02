@@ -12,25 +12,25 @@ export function AdminDashboard() {
 
   const stats = [
     {
-      label: "Team Members",
+      label: "Jamoa a’zolari",
       value: safeTeamMembers.length,
       icon: Users,
       color: "bg-blue-500",
     },
     {
-      label: "Projects",
+      label: "Loyihalar",
       value: safeProjects.length,
       icon: FolderOpen,
       color: "bg-purple-500",
     },
     {
-      label: "Services",
+      label: "Xizmatlar",
       value: safeServices.length,
       icon: Briefcase,
       color: "bg-pink-500",
     },
     {
-      label: "Total Views",
+      label: "Umumiy ko‘rishlar",
       value: "12.5K",
       icon: TrendingUp,
       color: "bg-green-500",
@@ -42,7 +42,7 @@ export function AdminDashboard() {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard data...</p>
+          <p className="mt-4 text-gray-600">Dashboard ma’lumotlari yuklanmoqda...</p>
         </div>
       </div>
     );
@@ -56,7 +56,7 @@ export function AdminDashboard() {
           onClick={refreshData}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Try Again
+          Qayta urinib ko‘rish
         </button>
       </div>
     );
@@ -64,7 +64,7 @@ export function AdminDashboard() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+      <h2 className="text-2xl font-bold mb-6">Boshqaruv paneli</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
@@ -84,7 +84,7 @@ export function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Recent Projects</h3>
+          <h3 className="text-lg font-semibold mb-4">So‘nggi loyihalar</h3>
           <div className="space-y-3">
             {safeProjects.length > 0 ? (
               safeProjects.slice(0, 5).map((project) => (
@@ -105,7 +105,7 @@ export function AdminDashboard() {
                     <p className="font-medium">{project.title}</p>
                     <p className="text-sm text-gray-600">
                       {new Date(project.created_at).toLocaleDateString(
-                        "en-US",
+                        "uz-UZ",
                         {
                           year: "numeric",
                           month: "short",
@@ -119,13 +119,15 @@ export function AdminDashboard() {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-4">No projects yet</p>
+              <p className="text-gray-500 text-center py-4">
+                Hozircha loyihalar yo‘q
+              </p>
             )}
           </div>
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Team Overview</h3>
+          <h3 className="text-lg font-semibold mb-4">Jamoa ko‘rinishi</h3>
           <div className="space-y-3">
             {safeTeamMembers.length > 0 ? (
               safeTeamMembers.slice(0, 5).map((member) => (
@@ -141,7 +143,7 @@ export function AdminDashboard() {
               ))
             ) : (
               <p className="text-gray-500 text-center py-4">
-                No team members yet
+                Hozircha jamoa a’zolari yo‘q
               </p>
             )}
           </div>

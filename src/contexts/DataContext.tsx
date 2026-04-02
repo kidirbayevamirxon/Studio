@@ -170,7 +170,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   }
   const addProject = async ({ url }: { url: string }) => {
-    const cleanUrl = getVideoIdUrl(url); // shu yerda list va index olib tashlanadi
+    const cleanUrl = getVideoIdUrl(url);
     const response = await axiosInstance.post(
       `/yt/?url=${encodeURIComponent(cleanUrl)}`,
     );

@@ -1,7 +1,13 @@
 import { Navigate, Outlet, Link, useLocation } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../ui/button";
-import { LogOut, Users, Briefcase, FolderOpen, LayoutDashboard } from "lucide-react";
+import {
+  LogOut,
+  Users,
+  Briefcase,
+  FolderOpen,
+  LayoutDashboard,
+} from "lucide-react";
 
 export function AdminLayout() {
   const { isAuthenticated, logout } = useAuth();
@@ -12,10 +18,10 @@ export function AdminLayout() {
   }
 
   const navItems = [
-    { path: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/admin/team", icon: Users, label: "Team" },
-    { path: "/admin/projects", icon: FolderOpen, label: "Projects" },
-    { path: "/admin/services", icon: Briefcase, label: "Services" },
+    { path: "/admin/dashboard", icon: LayoutDashboard, label: "Boshqaruv paneli" },
+    { path: "/admin/team", icon: Users, label: "Jamoa" },
+    { path: "/admin/projects", icon: FolderOpen, label: "Loyihalar" },
+    { path: "/admin/services", icon: Briefcase, label: "Xizmatlar" },
   ];
 
   return (
@@ -44,11 +50,11 @@ export function AdminLayout() {
             </div>
             <div className="flex items-center space-x-4">
               <Link to="/" className="text-sm text-gray-600 hover:text-gray-900">
-                View Site
+                Saytni ko‘rish
               </Link>
               <Button variant="outline" size="sm" onClick={logout}>
                 <LogOut size={16} className="mr-2" />
-                Logout
+                Chiqish
               </Button>
             </div>
           </div>
